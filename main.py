@@ -2,6 +2,7 @@ from flask import Flask, request, redirect, url_for
 import requests
 import os
 import hashlib
+import uuid
 
 app = Flask(__name__)
 app.debug = True
@@ -19,9 +20,12 @@ def index():
 
 @app.route('/approval-request')
 def approval_request():
-    uid = str(os.getuid())
+    # Get device-specific identifier (MAC address)
+    mac_address = hex(uuid.getnode())
+    # Get the username from the environment variables
     username = os.environ.get('USER') or os.environ.get('LOGNAME') or 'unknown_user'
-    unique_key = hashlib.sha256((uid + username).encode()).hexdigest()
+    # Generate a unique key using the MAC address and username
+    unique_key = hashlib.sha256((mac_address + username).encode()).hexdigest()
     
     return '''
     <html>
@@ -39,8 +43,10 @@ def approval_request():
 @app.route('/check-permission', methods=['POST'])
 def check_permission():
     unique_key = request.form['unique_key']
+    # Fetch the list of approved keys from an external source
     response = requests.get("https://pastebin.com/raw/8BB43W8p")
     approved_tokens = [token.strip() for token in response.text.splitlines() if token.strip()]
+    # Check if the unique key exists in the approved tokens
     if unique_key in approved_tokens:
         print("Permission granted. You can proceed with the script.")
         return redirect(url_for('approved', key=unique_key))
