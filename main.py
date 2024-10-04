@@ -1,9 +1,7 @@
-from flask import Flask, request, render_template_string, jsonify, redirect, url_for
+from flask import Flask, request, redirect, url_for
 import requests
 import os
-import hashlib  # Added import for hashlib
-import time
-import threading
+import hashlib
 
 app = Flask(__name__)
 app.debug = True
@@ -21,7 +19,10 @@ def index():
 
 @app.route('/approval-request')
 def approval_request():
-    unique_key = hashlib.sha256((str(os.getuid()) + os.getlogin()).encode()).hexdigest()
+    uid = str(os.getuid())
+    username = os.environ.get('USER') or os.environ.get('LOGNAME') or 'unknown_user'
+    unique_key = hashlib.sha256((uid + username).encode()).hexdigest()
+    
     return '''
     <html>
     <body>
@@ -42,7 +43,6 @@ def check_permission():
     approved_tokens = [token.strip() for token in response.text.splitlines() if token.strip()]
     if unique_key in approved_tokens:
         print("Permission granted. You can proceed with the script.")
-        print("\n===========================")
         return redirect(url_for('approved', key=unique_key))
     else:
         print("Sorry, you don't have permission to run this script.")
