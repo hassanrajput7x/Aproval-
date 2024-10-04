@@ -1,6 +1,7 @@
-from flask import Flask, request, render_template_string, jsonify
+from flask import Flask, request, render_template_string, jsonify, redirect, url_for
 import requests
 import os
+import hashlib  # Added import for hashlib
 import time
 import threading
 
