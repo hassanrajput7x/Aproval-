@@ -3,9 +3,23 @@ import requests
 import os
 import hashlib
 import uuid
+import re
 
 app = Flask(__name__)
 app.debug = True
+
+def get_device_name(user_agent):
+    """
+    Simple function to parse the User-Agent string and identify the device type (Android, iPhone, etc.)
+    """
+    if "Android" in user_agent:
+        device_name = "Android Device"
+    elif "iPhone" in user_agent or "iPad" in user_agent:
+        device_name = "iOS Device"
+    else:
+        device_name = "Unknown Device"
+    
+    return device_name
 
 @app.route('/')
 def index():
@@ -20,17 +34,23 @@ def index():
 
 @app.route('/approval-request')
 def approval_request():
-    # Get device-specific identifier (MAC address)
+    # Get the User-Agent to identify the device
+    user_agent = request.headers.get('User-Agent')
+    device_name = get_device_name(user_agent)
+    
+    # Get device-specific identifier (MAC address or device UUID)
     mac_address = hex(uuid.getnode())
     # Get the username from the environment variables
     username = os.environ.get('USER') or os.environ.get('LOGNAME') or 'unknown_user'
-    # Generate a unique key using the MAC address and username
-    unique_key = hashlib.sha256((mac_address + username).encode()).hexdigest()
     
+    # Generate a unique key using the MAC address, username, and device name
+    unique_key = hashlib.sha256((mac_address + username + device_name).encode()).hexdigest()
+
     return '''
     <html>
     <body>
     <h1>Approval Request</h1>
+    <p>Device detected: {}</p>
     <p>Your unique key is: {}</p>
     <form action="/check-permission" method="post">
     <input type="hidden" name="unique_key" value="{}">
@@ -38,14 +58,16 @@ def approval_request():
     </form>
     </body>
     </html>
-    '''.format(unique_key, unique_key)
+    '''.format(device_name, unique_key, unique_key)
 
 @app.route('/check-permission', methods=['POST'])
 def check_permission():
     unique_key = request.form['unique_key']
+    
     # Fetch the list of approved keys from an external source
     response = requests.get("https://pastebin.com/raw/8BB43W8p")
     approved_tokens = [token.strip() for token in response.text.splitlines() if token.strip()]
+    
     # Check if the unique key exists in the approved tokens
     if unique_key in approved_tokens:
         print("Permission granted. You can proceed with the script.")
