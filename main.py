@@ -1,11 +1,11 @@
-from flask import Flask, request, redirect, url_for
+from flask import Flask, request, redirect, url_for, session
 import requests
 import os
 import hashlib
 import uuid
-import re
 
 app = Flask(__name__)
+app.secret_key = os.urandom(24)  # Secret key for session management
 app.debug = True
 
 def get_device_name(user_agent):
@@ -37,14 +37,19 @@ def approval_request():
     # Get the User-Agent to identify the device
     user_agent = request.headers.get('User-Agent')
     device_name = get_device_name(user_agent)
+
+    # Generate a random UUID for each device session (new key for every device)
+    if 'device_id' not in session:
+        session['device_id'] = str(uuid.uuid4())  # Store the device-specific UUID in the session
     
-    # Get device-specific identifier (MAC address or device UUID)
-    mac_address = hex(uuid.getnode())
+    # Get the device-specific UUID from the session
+    device_id = session['device_id']
+    
     # Get the username from the environment variables
     username = os.environ.get('USER') or os.environ.get('LOGNAME') or 'unknown_user'
     
-    # Generate a unique key using the MAC address, username, and device name
-    unique_key = hashlib.sha256((mac_address + username + device_name).encode()).hexdigest()
+    # Generate a unique key using the UUID, username, and device name
+    unique_key = hashlib.sha256((device_id + username + device_name).encode()).hexdigest()
 
     return '''
     <html>
