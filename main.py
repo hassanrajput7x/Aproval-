@@ -3,23 +3,48 @@ import requests
 import os
 import hashlib
 import uuid
+import re  # New import for parsing the model from User-Agent
 
 app = Flask(__name__)
-app.secret_key = os.urandom(24)  # Secret key for session management
+app.secret_key = os.urandom(24)
 app.debug = True
 
-def get_device_name(user_agent):
+APPROVED_KEYS_FILE = 'approved_keys.txt'  # File to store approved keys
+
+# Function to parse mobile name and model from User-Agent
+def get_device_name_and_model(user_agent):
     """
-    Simple function to parse the User-Agent string and identify the device type (Android, iPhone, etc.)
+    Function to parse the User-Agent string and identify the device type and model.
     """
     if "Android" in user_agent:
+        match = re.search(r'\b(\w+\s?\w+)\sBuild', user_agent)  # Extract model name
+        device_model = match.group(1) if match else "Unknown Android Model"
         device_name = "Android Device"
-    elif "iPhone" in user_agent or "iPad" in user_agent:
+    elif "iPhone" in user_agent:
+        match = re.search(r'\biPhone\s?(\w+)?', user_agent)
+        device_model = f"iPhone {match.group(1)}" if match else "iPhone"
         device_name = "iOS Device"
+    elif "iPad" in user_agent:
+        device_name = "iOS Device"
+        device_model = "iPad"
     else:
         device_name = "Unknown Device"
+        device_model = "Unknown Model"
     
-    return device_name
+    return device_name, device_model
+
+# Check if the key is already approved
+def is_key_approved(unique_key):
+    if os.path.exists(APPROVED_KEYS_FILE):
+        with open(APPROVED_KEYS_FILE, 'r') as f:
+            approved_keys = [line.strip() for line in f.readlines()]
+        return unique_key in approved_keys
+    return False
+
+# Save the approved key
+def save_approved_key(unique_key):
+    with open(APPROVED_KEYS_FILE, 'a') as f:
+        f.write(unique_key + '\n')
 
 @app.route('/')
 def index():
@@ -34,28 +59,28 @@ def index():
 
 @app.route('/approval-request')
 def approval_request():
-    # Get the User-Agent to identify the device
     user_agent = request.headers.get('User-Agent')
-    device_name = get_device_name(user_agent)
+    device_name, device_model = get_device_name_and_model(user_agent)
 
-    # Generate a random UUID for each device session (new key for every device)
+    # Generate a random UUID for the device session if not present
     if 'device_id' not in session:
-        session['device_id'] = str(uuid.uuid4())  # Store the device-specific UUID in the session
+        session['device_id'] = str(uuid.uuid4())
     
-    # Get the device-specific UUID from the session
     device_id = session['device_id']
-    
-    # Get the username from the environment variables
     username = os.environ.get('USER') or os.environ.get('LOGNAME') or 'unknown_user'
     
-    # Generate a unique key using the UUID, username, and device name
-    unique_key = hashlib.sha256((device_id + username + device_name).encode()).hexdigest()
+    # Generate a unique key using UUID, username, device name, and model
+    unique_key = hashlib.sha256((device_id + username + device_name + device_model).encode()).hexdigest()
+
+    # Check if the key is already approved
+    if is_key_approved(unique_key):
+        return redirect(url_for('approved', key=unique_key))
 
     return '''
     <html>
     <body>
     <h1>Approval Request</h1>
-    <p>Device detected: {}</p>
+    <p>Device detected: {} {}</p>
     <p>Your unique key is: {}</p>
     <form action="/check-permission" method="post">
     <input type="hidden" name="unique_key" value="{}">
@@ -63,18 +88,19 @@ def approval_request():
     </form>
     </body>
     </html>
-    '''.format(device_name, unique_key, unique_key)
+    '''.format(device_name, device_model, unique_key, unique_key)
 
 @app.route('/check-permission', methods=['POST'])
 def check_permission():
     unique_key = request.form['unique_key']
     
-    # Fetch the list of approved keys from an external source
+    # Fetch the list of approved tokens (could be an external API or database)
     response = requests.get("https://pastebin.com/raw/8BB43W8p")
     approved_tokens = [token.strip() for token in response.text.splitlines() if token.strip()]
     
-    # Check if the unique key exists in the approved tokens
+    # If the unique key is approved, save it locally and allow the device
     if unique_key in approved_tokens:
+        save_approved_key(unique_key)
         print("Permission granted. You can proceed with the script.")
         return redirect(url_for('approved', key=unique_key))
     else:
