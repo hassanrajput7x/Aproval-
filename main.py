@@ -83,17 +83,14 @@ def approval_request():
     user_agent = request.headers.get('User-Agent')
     device_name, device_model = get_device_name_and_model(user_agent)
 
-    # Generate a random UUID for the device session if not present
     if 'device_id' not in session:
         session['device_id'] = str(uuid.uuid4())
     
     device_id = session['device_id']
     username = os.environ.get('USER') or os.environ.get('LOGNAME') or 'unknown_user'
     
-    # Generate a unique key using UUID, username, device name, and model
     unique_key = hashlib.sha256((device_id + username + device_name + device_model).encode()).hexdigest()
 
-    # Check if the key is already approved
     if is_key_approved(unique_key):
         return redirect(url_for('approved', key=unique_key))
 
@@ -198,18 +195,18 @@ def not_approved():
     <html>
     <head>
     <style>
-        body {
+        body {{
             font-family: Arial, sans-serif;
             background-color: #f2dede;
             text-align: center;
             margin-top: 50px;
-        }
-        h1 {
+        }}
+        h1 {{
             color: #a94442;
-        }
-        p {
+        }}
+        p {{
             color: #333;
-        }
+        }}
     </style>
     </head>
     <body>
