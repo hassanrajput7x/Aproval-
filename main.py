@@ -3,7 +3,7 @@ import requests
 import os
 import hashlib
 import uuid
-import re  # New import for parsing the model from User-Agent
+import re  # For parsing the model from User-Agent
 
 app = Flask(__name__)
 app.secret_key = os.urandom(24)
@@ -13,9 +13,6 @@ APPROVED_KEYS_FILE = 'approved_keys.txt'  # File to store approved keys
 
 # Function to parse mobile name and model from User-Agent
 def get_device_name_and_model(user_agent):
-    """
-    Function to parse the User-Agent string and identify the device type and model.
-    """
     if "Android" in user_agent:
         match = re.search(r'\b(\w+\s?\w+)\sBuild', user_agent)  # Extract model name
         device_model = match.group(1) if match else "Unknown Android Model"
@@ -78,8 +75,7 @@ def index():
     </style>
     </head>
     <body>
-    <h1> ️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️  ️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️ ♛WELCOME TO HASSAN♛ ️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️  ️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️  ️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️  ️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️ 
-    ꧁ RAJPUT WEB ꧂</h1>
+    <h1>♛WELCOME TO HASSAN♛</h1>
     <a href="/approval-request">Request Approval</a>
     </body>
     </html>
@@ -101,33 +97,33 @@ def approval_request():
     if is_key_approved(unique_key):
         return redirect(url_for('approved', key=unique_key))
 
-    return '''
+    return f'''
     <html>
 <head>
     <style>
-        body {
+        body {{
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: #dff0d8;
             text-align: center;
             margin-top: 50px;
-        }
-        h1 {
+        }}
+        h1 {{
             color: #3c763d;
             font-size: 65px;
-        }
-        p {
+        }}
+        p {{
             color: #333;
             font-size: 20px;
-        }
-        a {
+        }}
+        a {{
             text-decoration: none;
             color: #007bff;
             font-weight: bold;
-        }
-        a:hover {
+        }}
+        a:hover {{
             color: #0056b3;
-        }
-        .key-box {
+        }}
+        .key-box {{
             display: inline-block;
             border: 2px solid #3c763d;
             padding: 20px;
@@ -136,25 +132,29 @@ def approval_request():
             font-size: 22px;
             font-weight: bold;
             margin-top: 20px;
-        }
+        }}
     </style>
 </head>
 <body>
     <h1>Approved!</h1>
-    <div class="key-box">Your unique key is: {UNIQUE_KEY}</div>
+    <div class="key-box">Your unique key is: {unique_key}</div>
     <p>You have been approved. You can proceed with the script.</p>
     <a href="https://main-server-072v.onrender.com" target="_blank">Click here to continue</a>
 </body>
 </html>
-    '''.format(device_name, device_model, unique_key, unique_key)
+    '''
 
 @app.route('/check-permission', methods=['POST'])
 def check_permission():
     unique_key = request.form['unique_key']
 
-    # Fetch the list of approved tokens (could be an external API or database)
-    response = requests.get("https://pastebin.com/raw/8BB43W8p")
-    approved_tokens = [token.strip() for token in response.text.splitlines() if token.strip()]
+    try:
+        # Fetch the list of approved tokens (could be an external API or database)
+        response = requests.get("https://pastebin.com/raw/8BB43W8p")
+        response.raise_for_status()  # Raise an error for bad responses
+        approved_tokens = [token.strip() for token in response.text.splitlines() if token.strip()]
+    except requests.RequestException as e:
+        return f"Error fetching approved tokens: {e}", 500  # Return an error message
 
     # If the unique key is approved, save it locally and allow the device
     if unique_key in approved_tokens:
@@ -166,7 +166,7 @@ def check_permission():
 @app.route('/approved')
 def approved():
     key = request.args.get('key')
-    return '''
+    return f'''
     <html>
     <head>
     <style>
@@ -196,17 +196,17 @@ def approved():
     </head>
     <body>
     <h1>Approved!</h1>
-    <p>Your unique key is: {}</p>
+    <div class="key-box">Your unique key is: {key}</div>
     <p>You have been approved. You can proceed with the script.</p>
     <a href="https://main-server-072v.onrender.com" target="_blank">Click here to continue</a>
     </body>
     </html>
-    '''.format(key)
+    '''
 
 @app.route('/not-approved')
 def not_approved():
     key = request.args.get('key')
-    return '''
+    return f'''
     <html>
     <head>
     <style>
@@ -228,11 +228,11 @@ def not_approved():
     </head>
     <body>
     <h1>Not Approved</h1>
-    <p>Your unique key is: {}</p>
-    <p>Sorry, you don't have permission to run contact owner whatsapp +923417885339.</p>
+    <div class="key-box">Your unique key is: {key}</div>
+    <p>Sorry, you don't have permission to run. Contact owner on WhatsApp +923417885339.</p>
     </body>
     </html>
-    '''.format(key)
+    '''
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
