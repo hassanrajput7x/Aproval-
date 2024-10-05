@@ -50,6 +50,27 @@ def save_approved_key(unique_key):
 def index():
     return '''
     <html>
+    <head>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            text-align: center;
+            margin-top: 50px;
+        }
+        h1 {
+            color: #333;
+        }
+        a {
+            text-decoration: none;
+            color: #007bff;
+            font-weight: bold;
+        }
+        a:hover {
+            color: #0056b3;
+        }
+    </style>
+    </head>
     <body>
     <h1>Welcome!</h1>
     <a href="/approval-request">Request Approval</a>
@@ -78,6 +99,32 @@ def approval_request():
 
     return '''
     <html>
+    <head>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            text-align: center;
+            margin-top: 50px;
+        }
+        h1 {
+            color: #333;
+        }
+        p {
+            color: #555;
+        }
+        input[type="submit"] {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+        }
+        input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+    </style>
+    </head>
     <body>
     <h1>Approval Request</h1>
     <p>Device detected: {} {}</p>
@@ -112,6 +159,29 @@ def approved():
     key = request.args.get('key')
     return '''
     <html>
+    <head>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #dff0d8;
+            text-align: center;
+            margin-top: 50px;
+        }
+        h1 {
+            color: #3c763d;
+        }
+        p {
+            color: #333;
+        }
+        a {
+            text-decoration: none;
+            color: #007bff;
+        }
+        a:hover {
+            color: #0056b3;
+        }
+    </style>
+    </head>
     <body>
     <h1>Approved!</h1>
     <p>Your unique key is: {}</p>
@@ -126,6 +196,22 @@ def not_approved():
     key = request.args.get('key')
     return '''
     <html>
+    <head>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2dede;
+            text-align: center;
+            margin-top: 50px;
+        }
+        h1 {
+            color: #a94442;
+        }
+        p {
+            color: #333;
+        }
+    </style>
+    </head>
     <body>
     <h1>Not Approved</h1>
     <p>Your unique key is: {}</p>
