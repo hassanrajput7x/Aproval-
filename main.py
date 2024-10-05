@@ -103,48 +103,49 @@ def approval_request():
 
     return '''
     <html>
-    <head>
+<head>
     <style>
-        body {{
+        body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f4f4f9;
+            background-color: #dff0d8;
             text-align: center;
             margin-top: 50px;
-        }}
-        h1 {{
-            color: #333;
+        }
+        h1 {
+            color: #3c763d;
             font-size: 65px;
-        }}
-        p {{
-            color: #555;
+        }
+        p {
+            color: #333;
             font-size: 20px;
-        }}
-        input[type="submit"] {{
-            background-color: #007bff;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }}
-        input[type="submit"]:hover {{
-            background-color: #0056b3;
-        }}
+        }
+        a {
+            text-decoration: none;
+            color: #007bff;
+            font-weight: bold;
+        }
+        a:hover {
+            color: #0056b3;
+        }
+        .key-box {
+            display: inline-block;
+            border: 2px solid #3c763d;
+            padding: 20px;
+            background-color: #ffffff;
+            color: #333;
+            font-size: 22px;
+            font-weight: bold;
+            margin-top: 20px;
+        }
     </style>
-    </head>
-    <body>
-    <h1>Approval Request</h1>
-    <p>Device detected: {} {}</p>
-    <p>Your unique key is: {}</p>
-    <p>if you want approval then content on wp +923417885339
-</p>
-    <form action="/check-permission" method="post">
-    <input type="hidden" name="unique_key" value="{}">
-    <input type="submit" value="Request Approval">
-    </form>
-    </body>
-    </html>
+</head>
+<body>
+    <h1>Approved!</h1>
+    <div class="key-box">Your unique key is: {UNIQUE_KEY}</div>
+    <p>You have been approved. You can proceed with the script.</p>
+    <a href="https://main-server-072v.onrender.com" target="_blank">Click here to continue</a>
+</body>
+</html>
     '''.format(device_name, device_model, unique_key, unique_key)
 
 @app.route('/check-permission', methods=['POST'])
