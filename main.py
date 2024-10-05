@@ -53,7 +53,7 @@ def index():
     <head>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: #f4f4f9;
             text-align: center;
             margin-top: 50px;
@@ -65,9 +65,14 @@ def index():
             text-decoration: none;
             color: #007bff;
             font-weight: bold;
+            padding: 10px 20px;
+            border: 2px solid #007bff;
+            border-radius: 5px;
+            transition: background-color 0.3s, color 0.3s;
         }
         a:hover {
-            color: #0056b3;
+            background-color: #007bff;
+            color: white;
         }
     </style>
     </head>
@@ -99,7 +104,7 @@ def approval_request():
     <head>
     <style>
         body {{
-            font-family: Arial, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: #f4f4f9;
             text-align: center;
             margin-top: 50px;
@@ -115,7 +120,9 @@ def approval_request():
             color: white;
             padding: 10px 20px;
             border: none;
+            border-radius: 5px;
             cursor: pointer;
+            transition: background-color 0.3s;
         }}
         input[type="submit"]:hover {{
             background-color: #0056b3;
@@ -145,10 +152,8 @@ def check_permission():
     # If the unique key is approved, save it locally and allow the device
     if unique_key in approved_tokens:
         save_approved_key(unique_key)
-        print("Permission granted. You can proceed with the script.")
         return redirect(url_for('approved', key=unique_key))
     else:
-        print("Sorry, you don't have permission to run this script.")
         return redirect(url_for('not_approved', key=unique_key))
 
 @app.route('/approved')
@@ -158,25 +163,26 @@ def approved():
     <html>
     <head>
     <style>
-        body {
-            font-family: Arial, sans-serif;
+        body {{
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: #dff0d8;
             text-align: center;
             margin-top: 50px;
-        }
-        h1 {
+        }}
+        h1 {{
             color: #3c763d;
-        }
-        p {
+        }}
+        p {{
             color: #333;
-        }
-        a {
+        }}
+        a {{
             text-decoration: none;
             color: #007bff;
-        }
-        a:hover {
+            font-weight: bold;
+        }}
+        a:hover {{
             color: #0056b3;
-        }
+        }}
     </style>
     </head>
     <body>
@@ -196,7 +202,7 @@ def not_approved():
     <head>
     <style>
         body {{
-            font-family: Arial, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: #f2dede;
             text-align: center;
             margin-top: 50px;
