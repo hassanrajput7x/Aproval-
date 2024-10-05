@@ -117,7 +117,7 @@ def approval_request():
         }}
         p {{
             color: #555;
-            font-size: 15px;
+            font-size: 20px;
         }}
         input[type="submit"] {{
             background-color: #007bff;
@@ -181,7 +181,7 @@ def approved():
         }}
         p {{
             color: #333;
-            font-size: 15px;
+            font-size: 20px;
         }}
         a {{
             text-decoration: none;
@@ -221,7 +221,7 @@ def not_approved():
         }}
         p {{
             color: #333;
-            font-size: 15px;
+            font-size: 20px;
         }}
     </style>
     </head>
