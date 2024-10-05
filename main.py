@@ -30,7 +30,7 @@ def get_device_name_and_model(user_agent):
     else:
         device_name = "Unknown Device"
         device_model = "Unknown Model"
-    
+
     return device_name, device_model
 
 # Check if the key is already approved
@@ -60,6 +60,7 @@ def index():
         }
         h1 {
             color: #333;
+            font-size: 65px;
         }
         a {
             text-decoration: none;
@@ -77,7 +78,8 @@ def index():
     </style>
     </head>
     <body>
-    <h1>Welcome!</h1>
+    <h1> ️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️  ️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️ ♛WELCOME TO HASSAN♛ ️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️  ️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️  ️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️  ️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️️ 
+    ꧁ RAJPUT WEB ꧂</h1>
     <a href="/approval-request">Request Approval</a>
     </body>
     </html>
@@ -90,10 +92,10 @@ def approval_request():
 
     if 'device_id' not in session:
         session['device_id'] = str(uuid.uuid4())
-    
+
     device_id = session['device_id']
     username = os.environ.get('USER') or os.environ.get('LOGNAME') or 'unknown_user'
-    
+
     unique_key = hashlib.sha256((device_id + username + device_name + device_model).encode()).hexdigest()
 
     if is_key_approved(unique_key):
@@ -111,9 +113,11 @@ def approval_request():
         }}
         h1 {{
             color: #333;
+            font-size: 65px;
         }}
         p {{
             color: #555;
+            font-size: 25px;
         }}
         input[type="submit"] {{
             background-color: #007bff;
@@ -133,6 +137,8 @@ def approval_request():
     <h1>Approval Request</h1>
     <p>Device detected: {} {}</p>
     <p>Your unique key is: {}</p>
+    <p>if you want approval then content on wp +923417885339
+</p>
     <form action="/check-permission" method="post">
     <input type="hidden" name="unique_key" value="{}">
     <input type="submit" value="Request Approval">
@@ -144,11 +150,11 @@ def approval_request():
 @app.route('/check-permission', methods=['POST'])
 def check_permission():
     unique_key = request.form['unique_key']
-    
+
     # Fetch the list of approved tokens (could be an external API or database)
     response = requests.get("https://pastebin.com/raw/8BB43W8p")
     approved_tokens = [token.strip() for token in response.text.splitlines() if token.strip()]
-    
+
     # If the unique key is approved, save it locally and allow the device
     if unique_key in approved_tokens:
         save_approved_key(unique_key)
@@ -171,9 +177,11 @@ def approved():
         }}
         h1 {{
             color: #3c763d;
+            font-size: 65px;
         }}
         p {{
             color: #333;
+            font-size: 25px;
         }}
         a {{
             text-decoration: none;
@@ -209,16 +217,18 @@ def not_approved():
         }}
         h1 {{
             color: #a94442;
+            font-size: 65px;
         }}
         p {{
             color: #333;
+            font-size: 25px;
         }}
     </style>
     </head>
     <body>
     <h1>Not Approved</h1>
     <p>Your unique key is: {}</p>
-    <p>Sorry, you don't have permission to run this script.</p>
+    <p>Sorry, you don't have permission to run contact owner whatsapp +923417885339.</p>
     </body>
     </html>
     '''.format(key)
