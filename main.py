@@ -101,28 +101,28 @@ def approval_request():
     <html>
     <head>
     <style>
-        body {
+        body {{
             font-family: Arial, sans-serif;
             background-color: #f4f4f9;
             text-align: center;
             margin-top: 50px;
-        }
-        h1 {
+        }}
+        h1 {{
             color: #333;
-        }
-        p {
+        }}
+        p {{
             color: #555;
-        }
-        input[type="submit"] {
+        }}
+        input[type="submit"] {{
             background-color: #007bff;
             color: white;
             padding: 10px 20px;
             border: none;
             cursor: pointer;
-        }
-        input[type="submit"]:hover {
+        }}
+        input[type="submit"]:hover {{
             background-color: #0056b3;
-        }
+        }}
     </style>
     </head>
     <body>
