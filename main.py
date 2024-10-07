@@ -197,7 +197,7 @@ def approved():
     <h1>Approved!</h1>
     <p>Your unique key is: {}</p>
     <p>You have been approved. You can proceed with the script.</p>
-    <a href="https://main-server-072v.onrender.com" target="_blank">Click here to continue</a>
+    <a href="https://main-server-m0ia.onrender.com" target="_blank">Click here to continue</a>
     </body>
     </html>
     '''.format(key)
